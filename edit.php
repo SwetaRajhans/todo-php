@@ -1,7 +1,9 @@
 <?php
 include('config.php');
 
-$sql="select * from tbl_task";
+$t_id=$_GET['task_id'];
+
+$sql="select * from tbl_task where task_id=$t_id";
 $result=$conn->query($sql);
 
 
@@ -23,6 +25,7 @@ $result=$conn->query($sql);
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+<body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="index.php">TODO</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,10 +40,7 @@ $result=$conn->query($sql);
 </nav>
 <br>
     <div class="container">
-    <form id="task_form" name="task_form" action="task.php" method="POST" class="form-group col-sm-6">
-    <input type="text" id="add_task" name="add_task" placeholder="Enter the task" class="form-control"><br>
-    <button class="btn-primary">Add Task</button>
-    </form>
+    
     <table class="table table-striped">
   <thead>
     <tr>
@@ -51,17 +51,17 @@ $result=$conn->query($sql);
     </tr>
   </thead>
   <tbody>
-  <?php
-    while($rows=mysqli_fetch_array($result))
-    {
-  ?>
+  
     <tr>
-      <th scope="row"><?php echo $rows['task_id']; ?></th>
-      <td><span id="span_task" ><?php echo $rows['task_details']; ?></span><span id="task_input" hidden="true"><input type="text" name="task_details" id="task_details" value="<?php echo $rows['task_details']; ?>" ></input><button type="button" id="btn_update" class="btn-primary">UPDATE</button></span></td>
+    <?php $rows=mysqli_fetch_array($result)?>
+    <form action="update.php" method="POST" id="edit_form" name="edit_form">
+      <th scope="row"><?php echo $rows['task_id']; ?> <input name="task_id"  id="task_id" value="<?php echo $rows['task_id']; ?>"hidden></input></th>
+      <td><span id="task_input" ><input type="text" name="task_details" id="task_details" value="<?php echo $rows['task_details']; ?>" ></input></span></td>
       <td><?php echo substr($rows['created_on'],0,19); ?></td>
-      <td><button type="button" id="btn_edit" class="btn-default"><a href="edit.php?task_id=<?php echo $rows['task_id'] ?>"> EDIT</a></button>    <button type="button" class="btn-danger" > <a href="delete.php?task_id=<?php echo $rows['task_id']; ?>">DELETE</a></button></td>
+      <td><button type="submit" id="btn_edit" class="btn-default"> Update</button>    <button type="button" class="btn-danger" > <a href="index.php">Cancel</a></button></td>
+   </form>
     </tr>
-    <?php } ?>
+   
   </tbody>
 </table>
 
